@@ -10,7 +10,7 @@ jobs:
       - image: "python:latest"
     steps:
       - checkout
-      - run: python3 basi-add.py
+      - run: python3 add.py
 
 
 workflows:
