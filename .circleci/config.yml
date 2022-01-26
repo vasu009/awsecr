@@ -1,0 +1,38 @@
+version: 2.1
+
+orbs:
+  aws-ecr: circleci/aws-ecr@6.7.0
+
+jobs:
+  test:
+    working_directory: ~/circleci-python
+    docker:
+      - image: "python:latest"
+    steps:
+      - checkout
+      - run: python3 basi-add.py
+
+
+workflows:
+  build_and_push_image:
+    jobs:
+      - test
+      - aws-ecr/build-and-push-image:
+          account-url: $AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: $AWS_ACCESS_KEY_ID
+          aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+          dockerfile: Dockerfile
+          path: .
+          region: $AWS_REGION
+          repo: circle_pushimage
+          requires:
+            - test
+      
+
+workflows:
+  build_and_test:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
