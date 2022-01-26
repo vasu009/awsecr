@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@6.7.0
+  aws-ecr: circleci/aws-ecr@7.3.0
 
 jobs:
   test:
@@ -18,10 +18,12 @@ workflows:
     jobs:
       - test
       - aws-ecr/build-and-push-image:
-          tag: "latest"
-          dockerfile: ./Dockerfile
+          account-url: AWS_ECR_ACCOUNT_URL_ENV_VAR_NAME
+          aws-access-key-id: ACCESS_KEY_ID_ENV_VAR_NAME
+          aws-secret-access-key: SECRET_ACCESS_KEY_ENV_VAR_NAME
+          dockerfile: Dockerfile
           path: .
-          region: AWS_REGION
+          region: AWS_REGION_ENV_VAR_NAME
           repo: circle_pushimage
           requires:
             - test
